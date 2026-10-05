@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lins Salon — Website Resmi
 
-## Getting Started
+Landing page modern dan elegan untuk **Lins Salon**. Dibangun menggunakan Next.js (App Router), TypeScript, Tailwind CSS, Motion, dan Lucide Icons. Berjalan statis, ringan, dan tanpa dependensi backend.
 
-First, run the development server:
+## Menjalankan Proyek
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # Buka http://localhost:3000
+npm run build    # Build produksi
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Memperbarui Informasi Bisnis
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Semua informasi operasional dan konten salon berada di **`src/data/salon.ts`**. Cari kata kunci `PLACEHOLDER` untuk mengisi data asli salon:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Data | Keterangan |
+| --- | --- |
+| `kontak.nomorWhatsApp` | Format internasional tanpa tanda `+` (contoh: `62812xxxxxxxx`). Terhubung ke semua tombol reservasi. |
+| `kontak.telepon` | Nomor telepon yang ditampilkan ke pengunjung; tombol "Hubungi" akan otomatis aktif bila diisi. |
+| `kontak.alamat` | Alamat lengkap salon untuk section lokasi dan data terstruktur mesin pencari (SEO). |
+| `kontak.googleMapsUrl` | Tautan bagikan Google Maps resmi salon (Google Maps → Bagikan → Salin tautan). |
+| `kontak.instagram` | Username Instagram tanpa tanda `@`. Tautan footer akan otomatis aktif bila diisi. |
+| `layanan` | Daftar kategori perawatan, nama, deskripsi, harga awal (IDR), dan estimasi durasi. |
+| `testimoni` | Ulasan pengalaman pelanggan asli (pastikan dengan izin pelanggan). |
+| `jamOperasional` | Jadwal buka dan tutup salon yang ditampilkan di website dan SEO. |
 
-## Learn More
+## Mengganti Foto Salon
 
-To learn more about Next.js, take a look at the following resources:
+Ganti berkas gambar di dalam folder `public/images/` dengan foto asli dari Lins Salon (gunakan nama berkas yang sama):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```text
+public/images/
+  hero.jpg            Foto utama potret (~rasio 4:5)
+  salon.jpg           Foto interior suasana salon
+  og.jpg              Gambar pratinjau tautan media sosial (1200×630)
+  gallery/work-01…06  Foto hasil perawatan & suasana galeri (perbarui juga alt text di src/data/salon.ts)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Susunan galeri mengombinasikan format potret dan lanskap secara dinamis.
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Atur `NEXT_PUBLIC_SITE_URL` (misalnya: `https://linssalon.com`) pada environment hosting Anda agar tautan kanonikal, Open Graph, sitemap, dan robots.txt merujuk ke domain resmi.
