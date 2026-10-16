@@ -41,10 +41,10 @@ export function MobileBookingBar() {
         rel="noopener noreferrer"
         tabIndex={visible ? 0 : -1}
         aria-hidden={!visible}
-        className="flex h-13 items-center justify-center gap-2.5 bg-ink text-[0.8125rem] font-medium tracking-[0.04em] text-ivory"
+        className="flex h-13 items-center justify-center gap-2.5 rounded-full bg-rose text-sm font-semibold text-paper shadow-[0_12px_30px_-10px_rgba(143,61,82,0.5)]"
       >
         <WhatsAppIcon className="h-4 w-4" />
-        Reservasi via WhatsApp
+        Booking via WhatsApp
       </a>
     </div>
   );

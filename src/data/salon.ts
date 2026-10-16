@@ -105,19 +105,20 @@ export const salon: SalonConfig = {
     /** PLACEHOLDER — Username akun Instagram tanpa tanda @ */
     instagram: "",
 
-    /** PLACEHOLDER — Alamat lengkap lokasi salon */
+    /** Alamat lengkap lokasi salon. `jalan` berisi Plus Code Google Maps. */
     alamat: {
-      jalan: "",
-      kota: "",
-      provinsi: "",
-      kodePos: "",
+      jalan: "JJX4+FP5, Dangdang, Kec. Cisauk",
+      kota: "Kabupaten Tangerang",
+      provinsi: "Banten",
+      kodePos: "15340",
       negara: "ID",
     },
 
     /**
-     * PLACEHOLDER — Tautan bagikan Google Maps resmi Lins Salon.
+     * Tautan Google Maps berdasarkan Plus Code. Ganti dengan tautan bagikan
+     * resmi Lins Salon dari Google Maps jika sudah ada.
      */
-    googleMapsUrl: "",
+    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=JJX4%2BFP5%20Cisauk",
   },
 
   jamOperasional: [
@@ -247,19 +248,19 @@ export const salon: SalonConfig = {
 
   keunggulan: [
     {
-      judul: "Perhatian personal",
+      judul: "Dikerjakan pelan-pelan",
       deskripsi:
-        "Setiap janji temu diperlakukan dengan penuh perhatian dan ketelitian demi kenyamanan Anda.",
+        "Tidak diburu antrean. Setiap janji temu mendapat waktu dan perhatian penuh dari awal sampai selesai.",
     },
     {
-      judul: "Suasana nyaman & tenang",
+      judul: "Ruang yang adem",
       deskripsi:
-        "Ruang bernuansa hangat dan hening, tempat Anda dapat beristirahat sejenak dari hiruk-pikuk harian.",
+        "Hangat, hening, dan wangi. Cocok untuk rehat sebentar dari hiruk-pikuk hari-harimu.",
     },
     {
-      judul: "Konsultasi tulus",
+      judul: "Ngobrol dulu",
       deskripsi:
-        "Kami selalu meluangkan waktu mendengarkan keinginan Anda sebelum proses perawatan dimulai.",
+        "Kami dengarkan maumu sebelum gunting atau pewarna disentuh, supaya hasilnya benar-benar kamu.",
     },
   ],
 

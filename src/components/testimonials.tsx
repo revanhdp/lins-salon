@@ -1,43 +1,49 @@
 import { Reveal } from "@/components/reveal";
+import { cn } from "@/lib/utils";
 import { salon } from "@/data/salon";
+
+const offsets = ["", "lg:mt-14", "lg:mt-6"];
+const tints = ["bg-paper", "bg-blush/60", "bg-sage/70"];
 
 export function Testimonials() {
   if (salon.testimoni.length === 0) return null;
 
   return (
-    <section aria-labelledby="testimonials-heading" className="section-y bg-sand">
+    <section
+      aria-labelledby="testimonials-heading"
+      className="relative -mt-12 rounded-t-[2.5rem] bg-sand pb-28 pt-20 lg:-mt-16 lg:rounded-t-[4rem] lg:pb-40 lg:pt-32"
+    >
       <div className="shell">
-        <Reveal>
-          <p className="eyebrow">Ulasan &amp; Cerita</p>
-          <h2
-            id="testimonials-heading"
-            className="mt-5 font-serif text-[2.625rem] leading-[1.04] tracking-[-0.01em] text-ink sm:text-5xl lg:text-[3.5rem]"
-          >
-            Cerita dari para <em className="text-taupe">pelanggan</em>
+        <Reveal className="max-w-2xl">
+          <p className="chip">Kata pelanggan</p>
+          <h2 id="testimonials-heading" className="display h2-size mt-6">
+            Pulang dengan senyum, katanya.
           </h2>
         </Reveal>
 
-        <ul className="mt-14 grid lg:mt-20 lg:grid-cols-3">
+        <ul className="mt-14 grid gap-5 lg:mt-20 lg:grid-cols-3 lg:items-start lg:gap-6">
           {salon.testimoni.map((item, index) => (
             <Reveal
               as="li"
               key={`${item.nama}-${index}`}
               delay={index * 0.08}
-              className="border-t border-line py-10 lg:border-t-0 lg:border-l lg:px-10 lg:py-2 lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0"
+              className={cn(offsets[index % offsets.length])}
             >
-              <figure className="flex h-full flex-col">
-                <span aria-hidden="true" className="font-serif text-5xl leading-none text-taupe-light">
-                  &ldquo;
-                </span>
-                <blockquote className="mt-2 flex-1 font-serif text-[1.5rem] leading-[1.35] text-ink">
+              <figure
+                className={cn(
+                  "flex h-full flex-col rounded-[2rem] p-8 sm:p-9",
+                  tints[index % tints.length],
+                )}
+              >
+                {item.layanan && (
+                  <p className="inline-flex self-start rounded-full bg-ink/5 px-3 py-1 text-xs font-semibold text-ink-soft">
+                    {item.layanan}
+                  </p>
+                )}
+                <blockquote className="display mt-6 flex-1 text-[1.5rem] leading-[1.3] tracking-[-0.015em]">
                   <p>{item.kutipan}</p>
                 </blockquote>
-                <figcaption className="mt-8 text-sm text-ink">
-                  {item.nama}
-                  {item.layanan && (
-                    <span className="text-ink-soft"> · {item.layanan}</span>
-                  )}
-                </figcaption>
+                <figcaption className="mt-8 text-sm font-medium text-ink-soft">{item.nama}</figcaption>
               </figure>
             </Reveal>
           ))}

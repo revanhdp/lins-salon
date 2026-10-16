@@ -9,27 +9,32 @@ export function Cta() {
       id="reservasi"
       data-hide-mobile-cta
       aria-labelledby="cta-heading"
-      className="bg-ink text-ivory"
+      className="pb-20 pt-10 lg:pb-28"
     >
-      <div className="shell py-24 lg:py-36">
-        <Reveal className="grid gap-10 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-8">
-            <p className="eyebrow text-taupe-light">Jadwalkan Kunjungan</p>
-            <h2
-              id="cta-heading"
-              className="mt-6 font-serif text-[2.75rem] leading-[1.02] tracking-[-0.01em] sm:text-6xl lg:text-[4.5rem]"
-            >
-              Siap meluangkan waktu <em className="text-taupe-light">untuk diri sendiri?</em>
-            </h2>
-          </div>
-          <div className="lg:col-span-4 lg:justify-self-end">
-            <p className="max-w-xs text-[0.9375rem] leading-[1.75] text-ivory/70">
-              Jadwalkan janji temu Anda berikutnya bersama tim ahli Lins Salon.
-            </p>
-            <ButtonLink href={getWhatsAppUrl()} variant="light" external className="mt-7">
-              <WhatsAppIcon className="h-4 w-4" />
-              Reservasi via WhatsApp
-            </ButtonLink>
+      <div className="shell">
+        <Reveal>
+          <div className="relative overflow-hidden rounded-[2rem] bg-rose px-7 py-16 text-paper sm:rounded-[3rem] sm:px-14 lg:px-20 lg:py-24">
+            <div
+              aria-hidden="true"
+              className="absolute -right-24 -top-24 h-80 w-80 rounded-full border-[28px] border-paper/10 lg:-right-16 lg:-top-32 lg:h-[30rem] lg:w-[30rem] lg:border-[44px]"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute -bottom-28 right-24 hidden h-56 w-56 rounded-full bg-rose-deep/40 lg:block"
+            />
+
+            <div className="relative max-w-2xl">
+              <h2 id="cta-heading" className="display text-[2.75rem] sm:text-6xl lg:text-[4.5rem]">
+                Waktunya sisihkan satu jam untukmu.
+              </h2>
+              <p className="mt-6 max-w-md text-base leading-[1.7] text-paper/85">
+                Kirim pesan lewat WhatsApp, pilih jadwal yang cocok, dan kami siapkan sisanya.
+              </p>
+              <ButtonLink href={getWhatsAppUrl()} variant="light" external className="mt-9">
+                <WhatsAppIcon className="h-4 w-4" />
+                Booking via WhatsApp
+              </ButtonLink>
+            </div>
           </div>
         </Reveal>
       </div>

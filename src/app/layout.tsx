@@ -1,19 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import { MotionProvider } from "@/components/motion-provider";
 import { salon } from "@/data/salon";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["400", "500"],
-  style: ["normal", "italic"],
+  axes: ["SOFT", "opsz"],
   display: "swap",
 });
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
   display: "swap",
 });
@@ -55,7 +54,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f7f3ee",
+  themeColor: "#fdf6f3",
 };
 
 export default function RootLayout({
@@ -67,7 +66,7 @@ export default function RootLayout({
     <html
       lang="id"
       data-scroll-behavior="smooth"
-      className={`${cormorant.variable} ${manrope.variable}`}
+      className={`${fraunces.variable} ${jakarta.variable}`}
     >
       <body>
         <MotionProvider>{children}</MotionProvider>

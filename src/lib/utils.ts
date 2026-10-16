@@ -1,4 +1,4 @@
-import { salon } from "@/data/salon";
+import { type HariDalamSeminggu, salon } from "@/data/salon";
 
 /** Menggabungkan class name, mengabaikan nilai falsy. */
 export function cn(...classes: Array<string | false | null | undefined>): string {
@@ -45,4 +45,60 @@ export function formatPrice(value: number): string {
     currency: "IDR",
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+const hariDariInggris: Record<string, HariDalamSeminggu> = {
+  Monday: "Senin",
+  Tuesday: "Selasa",
+  Wednesday: "Rabu",
+  Thursday: "Kamis",
+  Friday: "Jumat",
+  Saturday: "Sabtu",
+  Sunday: "Minggu",
+};
+
+const urutanHari: HariDalamSeminggu[] = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
+
+export interface OpenStatus {
+  open: boolean;
+  label: string;
+}
+
+function toMinutes(time: string): number {
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours * 60 + minutes;
+}
+
+/** Status buka/tutup salon berdasarkan jam operasional (zona waktu WIB). */
+export function getOpenStatus(now: Date): OpenStatus | null {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Jakarta",
+    weekday: "long",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(now);
+  const part = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+
+  const today = hariDariInggris[part("weekday")];
+  if (!today) return null;
+  const minutesNow = Number(part("hour")) * 60 + Number(part("minute"));
+  const dayIndex = urutanHari.indexOf(today);
+
+  for (let offset = 0; offset < 7; offset++) {
+    const hari = urutanHari[(dayIndex + offset) % 7];
+    const entry = salon.jamOperasional.find((e) => e.buka && e.tutup && e.hari.includes(hari));
+    if (!entry?.buka || !entry.tutup) continue;
+
+    if (offset === 0) {
+      if (minutesNow >= toMinutes(entry.tutup)) continue;
+      if (minutesNow >= toMinutes(entry.buka)) {
+        return { open: true, label: `Buka sekarang · tutup ${entry.tutup} WIB` };
+      }
+      return { open: false, label: `Tutup · buka hari ini ${entry.buka} WIB` };
+    }
+    const kapan = offset === 1 ? "besok" : hari;
+    return { open: false, label: `Tutup · buka ${kapan} ${entry.buka} WIB` };
+  }
+  return null;
 }

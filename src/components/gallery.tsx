@@ -58,19 +58,15 @@ export function Gallery() {
   return (
     <section id="galeri" className="section-y">
       <div className="shell">
-        <Reveal className="grid gap-6 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-7">
-            <p className="eyebrow">Galeri Karya</p>
-            <h2 className="mt-5 font-serif text-[2.625rem] leading-[1.04] tracking-[-0.01em] text-ink sm:text-5xl lg:text-[3.5rem]">
-              Sekilas hasil <em className="text-taupe">karya kami.</em>
-            </h2>
-          </div>
-          <p className="max-w-xs text-sm leading-[1.75] text-ink-soft lg:col-span-4 lg:col-start-9 lg:justify-self-end">
-            Sentuhan detail dari salon kami — tata rambut, pewarnaan, creambath, dan perawatan kecantikan.
+        <Reveal className="max-w-2xl">
+          <p className="chip">Galeri</p>
+          <h2 className="display h2-size mt-6">Sedikit intip hasil kerja kami.</h2>
+          <p className="mt-6 max-w-lg text-base leading-[1.75] text-ink-soft">
+            Tata rambut, pewarnaan, creambath, sampai perawatan kecantikan. Klik foto untuk melihat lebih besar.
           </p>
         </Reveal>
 
-        <ul className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 lg:mt-20 lg:grid-cols-12 lg:gap-x-8 lg:gap-y-16">
+        <ul className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 lg:mt-20 lg:grid-cols-12 lg:gap-x-6 lg:gap-y-10">
           {images.map((image, index) => {
             const slot = slots[index % slots.length];
             return (
@@ -88,7 +84,7 @@ export function Gallery() {
                   }}
                   aria-label={`Lihat foto lebih besar: ${image.alt}`}
                   className={cn(
-                    "group relative block w-full cursor-zoom-in overflow-hidden bg-sand",
+                    "group relative block w-full cursor-zoom-in overflow-hidden rounded-[1.5rem] bg-sand sm:rounded-[2rem]",
                     slot.frame,
                   )}
                 >
@@ -97,13 +93,12 @@ export function Gallery() {
                     alt={image.alt}
                     fill
                     sizes={slot.sizes}
-                    className="object-cover transition-transform duration-[1.2s] ease-soft group-hover:scale-[1.03]"
+                    className="object-cover transition-transform duration-[1.2s] ease-soft group-hover:scale-[1.04]"
                   />
+                  <span className="absolute bottom-3 left-3 rounded-full bg-paper/90 px-3.5 py-1.5 text-xs font-semibold text-ink backdrop-blur-sm sm:bottom-4 sm:left-4">
+                    {image.kategori}
+                  </span>
                 </button>
-                <p className="mt-3 hidden justify-between text-[0.6875rem] tracking-[0.2em] text-ink-soft uppercase md:flex">
-                  <span>{image.kategori}</span>
-                  <span className="text-taupe">{String(index + 1).padStart(2, "0")}</span>
-                </p>
               </Reveal>
             );
           })}
@@ -117,7 +112,7 @@ export function Gallery() {
             role="dialog"
             aria-modal="true"
             aria-label="Penampil gambar"
-            className="fixed inset-0 z-[60] flex flex-col bg-ink/95 text-ivory"
+            className="fixed inset-0 z-[60] flex flex-col bg-plum/95 text-paper"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -125,9 +120,9 @@ export function Gallery() {
             onClick={close}
           >
             <div className="shell flex h-16 shrink-0 items-center justify-between">
-              <p className="text-[0.6875rem] tracking-[0.2em] uppercase text-ivory/70">
+              <p className="text-sm font-medium text-paper/80">
                 {String(active + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
-                <span className="mx-3 text-ivory/30">—</span>
+                <span className="mx-3 text-paper/30">·</span>
                 {current.kategori}
               </p>
               <button
@@ -135,7 +130,7 @@ export function Gallery() {
                 type="button"
                 onClick={close}
                 aria-label="Tutup penampil gambar"
-                className="-mr-2 inline-flex h-11 w-11 items-center justify-center text-ivory/80 transition-colors hover:text-ivory"
+                className="-mr-2 inline-flex h-11 w-11 items-center justify-center rounded-full text-paper/80 transition-colors hover:bg-paper/10 hover:text-paper"
               >
                 <X className="h-5 w-5" strokeWidth={1.5} />
               </button>
@@ -156,7 +151,7 @@ export function Gallery() {
                     alt={current.alt}
                     fill
                     sizes="100vw"
-                    className="object-contain"
+                    className="rounded-2xl object-contain"
                     onClick={(event) => event.stopPropagation()}
                   />
                 </m.div>
@@ -169,7 +164,7 @@ export function Gallery() {
                   step(-1);
                 }}
                 aria-label="Foto sebelumnya"
-                className="absolute left-1 top-1/2 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center text-ivory/70 transition-colors hover:text-ivory sm:left-4"
+                className="absolute left-1 top-1/2 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center text-paper/70 transition-colors hover:text-paper sm:left-4"
               >
                 <ChevronLeft className="h-6 w-6" strokeWidth={1.25} />
               </button>
@@ -180,7 +175,7 @@ export function Gallery() {
                   step(1);
                 }}
                 aria-label="Foto selanjutnya"
-                className="absolute right-1 top-1/2 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center text-ivory/70 transition-colors hover:text-ivory sm:right-4"
+                className="absolute right-1 top-1/2 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center text-paper/70 transition-colors hover:text-paper sm:right-4"
               >
                 <ChevronRight className="h-6 w-6" strokeWidth={1.25} />
               </button>
