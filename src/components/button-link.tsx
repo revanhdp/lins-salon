@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -28,10 +29,20 @@ export function ButtonLink({
   children,
   ...rest
 }: ButtonLinkProps) {
+  const classes = cn(base, variants[variant], className);
+
+  if (!external && href.startsWith("/")) {
+    return (
+      <Link href={href} className={classes} {...rest}>
+        {children}
+      </Link>
+    );
+  }
+
   return (
     <a
       href={href}
-      className={cn(base, variants[variant], className)}
+      className={classes}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       {...rest}
     >

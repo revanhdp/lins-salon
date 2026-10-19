@@ -1,12 +1,13 @@
 import { Reveal } from "@/components/reveal";
 import { cn } from "@/lib/utils";
-import { salon } from "@/data/salon";
+import { getContent } from "@/lib/content";
 
 const offsets = ["", "lg:mt-14", "lg:mt-6"];
 const tints = ["bg-paper", "bg-blush/60", "bg-sage/70"];
 
-export function Testimonials() {
-  if (salon.testimoni.length === 0) return null;
+export async function Testimonials() {
+  const { testimoni } = await getContent();
+  if (testimoni.length === 0) return null;
 
   return (
     <section
@@ -21,8 +22,8 @@ export function Testimonials() {
           </h2>
         </Reveal>
 
-        <ul className="mt-14 grid gap-5 lg:mt-20 lg:grid-cols-3 lg:items-start lg:gap-6">
-          {salon.testimoni.map((item, index) => (
+        <ul className="mt-14 grid grid-cols-1 gap-5 lg:mt-20 lg:grid-cols-3 lg:items-start lg:gap-6">
+          {testimoni.map((item, index) => (
             <Reveal
               as="li"
               key={`${item.nama}-${index}`}

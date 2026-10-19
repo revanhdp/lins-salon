@@ -1,13 +1,14 @@
 import Image from "next/image";
 import { Reveal } from "@/components/reveal";
-import { salon } from "@/data/salon";
+import { getContent } from "@/lib/content";
 
-export function About() {
-  const gambarInset = salon.galeri.find((g) => g.kategori === "Kecantikan") ?? salon.galeri[0];
+export async function About() {
+  const { galeri } = await getContent();
+  const gambarInset = galeri[0];
 
   return (
     <section id="tentang" className="section-y pb-32 lg:pb-44">
-      <div className="shell grid items-center gap-16 lg:grid-cols-12 lg:gap-12">
+      <div className="shell grid grid-cols-1 items-center gap-16 lg:grid-cols-12 lg:gap-12">
         <Reveal className="relative lg:col-span-6">
           <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-sand sm:aspect-[5/4] lg:aspect-[4/5]">
             <Image
@@ -18,15 +19,17 @@ export function About() {
               className="object-cover object-[48%_50%]"
             />
           </div>
-          <div className="absolute -bottom-10 -right-2 h-36 w-36 overflow-hidden rounded-full border-[6px] border-paper bg-sand shadow-[0_18px_40px_-18px_rgba(74,40,56,0.35)] sm:-right-8 sm:h-48 sm:w-48">
-            <Image
-              src={gambarInset.src}
-              alt={gambarInset.alt}
-              fill
-              sizes="12rem"
-              className="object-cover"
-            />
-          </div>
+          {gambarInset && (
+            <div className="absolute -bottom-10 -right-2 h-36 w-36 overflow-hidden rounded-full border-[6px] border-paper bg-sand shadow-[0_18px_40px_-18px_rgba(74,40,56,0.35)] sm:-right-8 sm:h-48 sm:w-48">
+              <Image
+                src={gambarInset.src}
+                alt={gambarInset.alt}
+                fill
+                sizes="12rem"
+                className="object-cover"
+              />
+            </div>
+          )}
         </Reveal>
 
         <Reveal className="lg:col-span-5 lg:col-start-8" delay={0.1}>

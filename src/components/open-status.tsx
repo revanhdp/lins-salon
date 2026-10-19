@@ -1,18 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { JamOperasional } from "@/data/salon";
 import { cn, getOpenStatus, type OpenStatus } from "@/lib/utils";
 
 /** Penanda buka/tutup. Dihitung di browser agar sesuai waktu saat halaman dilihat. */
-export function OpenStatusChip({ className }: { className?: string }) {
+export function OpenStatusChip({
+  jamOperasional,
+  className,
+}: {
+  jamOperasional: JamOperasional[];
+  className?: string;
+}) {
   const [status, setStatus] = useState<OpenStatus | null>(null);
 
   useEffect(() => {
-    const update = () => setStatus(getOpenStatus(new Date()));
+    const update = () => setStatus(getOpenStatus(new Date(), jamOperasional));
     update();
     const id = setInterval(update, 60_000);
     return () => clearInterval(id);
-  }, []);
+  }, [jamOperasional]);
 
   return (
     <p

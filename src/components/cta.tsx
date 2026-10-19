@@ -1,9 +1,12 @@
 import { ButtonLink } from "@/components/button-link";
 import { WhatsAppIcon } from "@/components/icons";
 import { Reveal } from "@/components/reveal";
+import { getContent } from "@/lib/content";
 import { getWhatsAppUrl } from "@/lib/utils";
 
-export function Cta() {
+export async function Cta() {
+  const { kontak } = await getContent();
+
   return (
     <section
       id="reservasi"
@@ -30,7 +33,7 @@ export function Cta() {
               <p className="mt-6 max-w-md text-base leading-[1.7] text-paper/85">
                 Kirim pesan lewat WhatsApp, pilih jadwal yang cocok, dan kami siapkan sisanya.
               </p>
-              <ButtonLink href={getWhatsAppUrl()} variant="light" external className="mt-9">
+              <ButtonLink href={getWhatsAppUrl(kontak)} variant="light" external className="mt-9">
                 <WhatsAppIcon className="h-4 w-4" />
                 Booking via WhatsApp
               </ButtonLink>

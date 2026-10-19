@@ -1,11 +1,17 @@
 "use client";
 
 import { ArrowUpRight, Menu, X } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { navigation, salon } from "@/data/salon";
-import { cn, getWhatsAppUrl } from "@/lib/utils";
+import { type JamOperasional, navigation } from "@/data/salon";
+import { cn } from "@/lib/utils";
 
-export function Navbar() {
+interface NavbarProps {
+  whatsappUrl: string;
+  jamOperasional: JamOperasional[];
+}
+
+export function Navbar({ whatsappUrl, jamOperasional }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -59,34 +65,34 @@ export function Navbar() {
           scrolled ? "h-16" : "h-20",
         )}
       >
-        <a
-          href="#beranda"
+        <Link
+          href="/"
           onClick={close}
-          className="display flex items-center gap-2 text-2xl text-ink"
+          className="display flex h-11 shrink-0 items-center gap-2 whitespace-nowrap text-2xl text-ink"
         >
           <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-rose" />
           Lins Salon
-        </a>
+        </Link>
 
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-8 lg:flex">
           {navigation.map((item) => (
             <li key={item.href}>
-              <a
+              <Link
                 href={item.href}
-                className="relative py-2 text-sm font-medium text-ink-soft transition-colors hover:text-ink after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:origin-left after:scale-x-0 after:rounded-full after:bg-rose after:transition-transform after:duration-500 hover:after:scale-x-100"
+                className="relative whitespace-nowrap py-2 text-sm font-medium text-ink-soft transition-colors hover:text-ink after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:origin-left after:scale-x-0 after:rounded-full after:bg-rose after:transition-transform after:duration-500 hover:after:scale-x-100"
               >
                 {item.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
 
         <a
-          href={getWhatsAppUrl()}
+          href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
           className={cn(
-            "hidden items-center rounded-full bg-rose px-6 text-sm font-semibold text-paper transition-[background-color,height] duration-500 hover:bg-rose-deep md:inline-flex",
+            "hidden shrink-0 items-center whitespace-nowrap rounded-full bg-rose px-6 text-sm font-semibold text-paper transition-[background-color,height] duration-500 hover:bg-rose-deep lg:inline-flex",
             scrolled ? "h-10" : "h-11",
           )}
         >
@@ -100,7 +106,7 @@ export function Navbar() {
           aria-expanded={open}
           aria-controls="mobile-menu"
           aria-label={open ? "Tutup menu" : "Buka menu"}
-          className="-mr-2 inline-flex h-11 w-11 items-center justify-center text-ink md:hidden"
+          className="-mr-2 inline-flex h-11 w-11 items-center justify-center text-ink lg:hidden"
         >
           {open ? <X className="h-5 w-5" strokeWidth={1.5} /> : <Menu className="h-5 w-5" strokeWidth={1.5} />}
         </button>
@@ -111,7 +117,7 @@ export function Navbar() {
         id="mobile-menu"
         hidden={!open}
         className={cn(
-          "overflow-y-auto border-t border-line/70 bg-paper md:hidden",
+          "overflow-y-auto border-t border-line/70 bg-paper lg:hidden",
           scrolled ? "h-[calc(100dvh-4rem)]" : "h-[calc(100dvh-5rem)]",
         )}
       >
@@ -123,21 +129,21 @@ export function Navbar() {
                 className="animate-rise"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                <a
+                <Link
                   href={item.href}
                   onClick={close}
                   className="display flex items-center justify-between border-b border-dashed border-line py-5 text-[2rem] leading-none text-ink"
                 >
                   {item.label}
                   <ArrowUpRight className="h-5 w-5 text-rose" strokeWidth={1.75} />
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
 
           <div className="space-y-5 pt-10">
             <a
-              href={getWhatsAppUrl()}
+              href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               onClick={close}
@@ -146,7 +152,7 @@ export function Navbar() {
               Booking Sekarang
             </a>
             <p className="text-center text-xs text-ink-soft">
-              {salon.jamOperasional
+              {jamOperasional
                 .filter((h) => h.buka)
                 .map((h) => `${h.label} · ${h.buka} — ${h.tutup} WIB`)
                 .join(" ")}

@@ -7,7 +7,7 @@ const icons: LucideIcon[] = [Clock, Sprout, MessagesSquare];
 export function WhyUs() {
   return (
     <section aria-labelledby="why-heading" className="section-y">
-      <div className="shell grid gap-12 lg:grid-cols-12 lg:gap-12">
+      <div className="shell grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-12">
         <Reveal className="lg:col-span-5">
           <p className="chip">Kenapa Lins Salon</p>
           <h2 id="why-heading" className="display h2-size mt-6">

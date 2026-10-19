@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { WhatsAppIcon } from "@/components/icons";
-import { cn, getWhatsAppUrl } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 /**
  * Bar reservasi khusus tampilan mobile. Tetap tersembunyi ketika section yang
  * telah memiliki tombol reservasi (bertanda `data-hide-mobile-cta`) sedang terlihat.
  */
-export function MobileBookingBar() {
+export function MobileBookingBar({ whatsappUrl }: { whatsappUrl: string }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export function MobileBookingBar() {
       )}
     >
       <a
-        href={getWhatsAppUrl()}
+        href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
         tabIndex={visible ? 0 : -1}

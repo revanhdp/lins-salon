@@ -9,23 +9,16 @@ import { Navbar } from "@/components/navbar";
 import { Services } from "@/components/services";
 import { Testimonials } from "@/components/testimonials";
 import { WhyUs } from "@/components/why-us";
-import { HariDalamSeminggu, salon } from "@/data/salon";
-import { getAddressLines, getMapsUrl } from "@/lib/utils";
+import { type SiteContent, salon } from "@/data/salon";
+import { getContent } from "@/lib/content";
+import { getAddressLines, getMapsUrl, getWhatsAppUrl } from "@/lib/utils";
 
-const hariKeSchemaMap: Record<HariDalamSeminggu, string> = {
-  Senin: "Monday",
-  Selasa: "Tuesday",
-  Rabu: "Wednesday",
-  Kamis: "Thursday",
-  Jumat: "Friday",
-  Sabtu: "Saturday",
-  Minggu: "Sunday",
-};
+/** Halaman dibuat ulang paling lama tiap 60 detik; perubahan di admin langsung menyegarkan cache. */
+export const revalidate = 60;
 
 /** Data terstruktur schema.org BeautySalon — hanya memuat informasi yang telah diisi. */
-function getStructuredData() {
-  const { kontak } = salon;
-  const hasAddress = getAddressLines().length > 0;
+function getStructuredData({ kontak }: SiteContent) {
+  const hasAddress = getAddressLines(kontak).length > 0;
 
   return {
     "@context": "https://schema.org",
@@ -44,26 +37,21 @@ function getStructuredData() {
         postalCode: kontak.alamat.kodePos,
         addressCountry: kontak.alamat.negara,
       },
-      hasMap: getMapsUrl(),
+      hasMap: getMapsUrl(kontak),
     }),
     ...(kontak.instagram && {
       sameAs: [`https://www.instagram.com/${kontak.instagram}/`],
     }),
-    openingHoursSpecification: salon.jamOperasional
-      .filter((entry) => entry.buka && entry.tutup)
-      .map((entry) => ({
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: entry.hari.map((h) => hariKeSchemaMap[h]),
-        opens: entry.buka,
-        closes: entry.tutup,
-      })),
   };
 }
 
-export default function Home() {
+export default async function Home() {
+  const content = await getContent();
+  const whatsappUrl = getWhatsAppUrl(content.kontak);
+
   return (
     <>
-      <Navbar />
+      <Navbar whatsappUrl={whatsappUrl} jamOperasional={content.jamOperasional} />
       <main id="main">
         <Hero />
         <About />
@@ -75,11 +63,11 @@ export default function Home() {
         <Cta />
       </main>
       <Footer />
-      <MobileBookingBar />
+      <MobileBookingBar whatsappUrl={whatsappUrl} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(getStructuredData()).replace(/</g, "\\u003c"),
+          __html: JSON.stringify(getStructuredData(content)).replace(/</g, "\\u003c"),
         }}
       />
     </>

@@ -1,8 +1,9 @@
 /**
  * Lins Salon — Konten & Konfigurasi Bisnis.
  *
- * Semua informasi operasional dan konten bisnis dikelola di file ini.
- * Cari kata kunci "PLACEHOLDER" untuk melihat bagian yang perlu diisi data riil.
+ * File ini berisi identitas tetap situs dan DATA BAWAAN. Kontak, jam buka, layanan,
+ * galeri, dan testimoni dikelola lewat panel /admin (MongoDB); data di bawah dipakai
+ * sebagai isi awal (seed) dan sebagai cadangan jika database tidak terjangkau.
  */
 
 export type HariDalamSeminggu =
@@ -16,7 +17,7 @@ export type HariDalamSeminggu =
 
 export interface JamOperasional {
   label: string;
-  hari: HariDalamSeminggu[];
+  // hari: HariDalamSeminggu[];
   /** Format 24 jam "HH:MM". Kosongkan buka/tutup jika libur/tutup. */
   buka?: string;
   tutup?: string;
@@ -39,6 +40,8 @@ export interface FotoGaleri {
   src: string;
   alt: string;
   kategori: "Rambut" | "Pewarnaan" | "Perawatan" | "Kecantikan" | "Suasana";
+  /** Judul pendek di atas foto. Jika kosong, memakai `kategori`. */
+  label?: string;
   width: number;
   height: number;
 }
@@ -54,29 +57,40 @@ export interface KeunggulanItem {
   deskripsi: string;
 }
 
+export interface Kontak {
+  nomorWhatsApp: string;
+  pesanWhatsApp: string;
+  telepon: string;
+  instagram: string;
+  alamat: {
+    jalan: string;
+    kota: string;
+    provinsi: string;
+    kodePos: string;
+    negara: string;
+  };
+  googleMapsUrl: string;
+}
+
 export interface SalonConfig {
   nama: string;
   tagline: string;
   deskripsi: string;
   siteUrl: string;
-  kontak: {
-    nomorWhatsApp: string;
-    pesanWhatsApp: string;
-    telepon: string;
-    instagram: string;
-    alamat: {
-      jalan: string;
-      kota: string;
-      provinsi: string;
-      kodePos: string;
-      negara: string;
-    };
-    googleMapsUrl: string;
-  };
+  kontak: Kontak;
   jamOperasional: JamOperasional[];
   layanan: KategoriLayanan[];
   galeri: FotoGaleri[];
   keunggulan: KeunggulanItem[];
+  testimoni: TestimoniItem[];
+}
+
+/** Bagian situs yang bisa diubah lewat panel admin (disimpan di MongoDB). */
+export interface SiteContent {
+  kontak: Kontak;
+  jamOperasional: JamOperasional[];
+  layanan: KategoriLayanan[];
+  galeri: FotoGaleri[];
   testimoni: TestimoniItem[];
 }
 
@@ -123,14 +137,9 @@ export const salon: SalonConfig = {
 
   jamOperasional: [
     {
-      label: "Senin — Sabtu",
-      hari: ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],
+      label: "Setiap Hari",
       buka: "09:00",
-      tutup: "20:00",
-    },
-    {
-      label: "Minggu",
-      hari: ["Minggu"],
+      tutup: "19:00",
     },
   ],
 
@@ -203,46 +212,44 @@ export const salon: SalonConfig = {
 
   galeri: [
     {
-      src: "/images/gallery/work-01.jpg",
-      alt: "Rambut bergelombang dengan sentuhan pewarnaan balayage karamel lembut",
+      src: "/images/aset1.jpeg",
+      alt: "Rambut bob pendek berwarna burgundy gelap yang berkilau, difoto dari belakang",
       kategori: "Pewarnaan",
-      width: 896,
-      height: 1200,
+      label: "Burgundy bob",
+      width: 960,
+      height: 1280,
     },
     {
-      src: "/images/gallery/work-02.jpg",
-      alt: "Proses pemotongan rambut dengan gunting dan sisir profesional",
-      kategori: "Rambut",
-      width: 1200,
-      height: 896,
+      src: "/images/aset2.jpeg",
+      alt: "Rambut sebahu lurus berwarna tembaga oranye hangat dengan akar sedikit lebih gelap",
+      kategori: "Pewarnaan",
+      label: "Copper lurus",
+      width: 960,
+      height: 1280,
     },
     {
-      src: "/images/gallery/work-04.jpg",
-      alt: "Momen relaksasi pijat creambath di area cuci rambut salon",
-      kategori: "Perawatan",
-      width: 1200,
-      height: 896,
+      src: "/images/aset3.jpeg",
+      alt: "Rambut sebahu cokelat dengan highlight karamel dan ujung bergelombang lembut",
+      kategori: "Pewarnaan",
+      label: "Karamel highlight",
+      width: 960,
+      height: 1280,
     },
     {
-      src: "/images/gallery/work-03.jpg",
-      alt: "Hasil perawatan kuku manicure dengan pulasan kuteks nude bersih di atas kain linen",
-      kategori: "Kecantikan",
-      width: 896,
-      height: 1200,
+      src: "/images/aset4.jpeg",
+      alt: "Rambut sebahu lurus berwarna magenta tua yang cerah dan mengilap",
+      kategori: "Pewarnaan",
+      label: "Magenta",
+      width: 960,
+      height: 1280,
     },
     {
-      src: "/images/gallery/work-05.jpg",
-      alt: "Model rambut bob lurus berkilau warna espresso tampak samping",
-      kategori: "Rambut",
-      width: 896,
-      height: 1200,
-    },
-    {
-      src: "/images/gallery/work-06.jpg",
-      alt: "Aplikasi masker perawatan facial yang menenangkan di ruang perawatan",
-      kategori: "Kecantikan",
-      width: 1200,
-      height: 896,
+      src: "/images/aset5.jpeg",
+      alt: "Rambut berwarna plum keunguan dengan ujung curly dan bagian atas tetap hitam",
+      kategori: "Pewarnaan",
+      label: "Plum dengan ujung curly",
+      width: 960,
+      height: 1280,
     },
   ],
 
@@ -287,9 +294,9 @@ export const salon: SalonConfig = {
 };
 
 export const navigation = [
-  { label: "Beranda", href: "#beranda" },
-  { label: "Layanan", href: "#layanan" },
-  { label: "Galeri", href: "#galeri" },
-  { label: "Tentang Kami", href: "#tentang" },
-  { label: "Kontak", href: "#kontak" },
+  { label: "Beranda", href: "/#beranda" },
+  { label: "Layanan", href: "/#layanan" },
+  { label: "Galeri", href: "/galeri" },
+  { label: "Tentang Kami", href: "/#tentang" },
+  { label: "Kontak", href: "/#kontak" },
 ] as const;

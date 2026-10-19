@@ -1,44 +1,66 @@
 # Lins Salon — Website Resmi
 
-Landing page modern dan elegan untuk **Lins Salon**. Dibangun menggunakan Next.js (App Router), TypeScript, Tailwind CSS, Motion, dan Lucide Icons. Berjalan statis, ringan, dan tanpa dependensi backend.
+Website **Lins Salon** dibangun dengan Next.js (App Router), TypeScript, Tailwind CSS, dan MongoDB. Harga, foto galeri, testimoni, kontak, dan jam buka diubah lewat panel admin di `/admin`, tanpa menyentuh kode.
 
-## Menjalankan Proyek
+## Menjalankan di Komputer Sendiri
 
 ```bash
 npm install
-npm run dev      # Buka http://localhost:3000
-npm run build    # Build produksi
+docker run -d --name lins-mongo -p 127.0.0.1:27017:27017 -v lins-mongo-data:/data/db mongo:7
+cp .env.example .env.local      # lalu isi ADMIN_PASSWORD dan SESSION_SECRET
+npm run dev                     # http://localhost:3000
 ```
 
-## Memperbarui Informasi Bisnis
+Buka `http://localhost:3000/admin`, masuk dengan `ADMIN_PASSWORD`, lalu klik **Muat data bawaan** (sekali saja). Data bawaan diambil dari `src/data/salon.ts`.
 
-Semua informasi operasional dan konten salon berada di **`src/data/salon.ts`**. Cari kata kunci `PLACEHOLDER` untuk mengisi data asli salon:
+Tanpa database, website tetap tampil memakai data bawaan itu. Hanya panel admin yang tidak bisa dipakai.
 
-| Data | Keterangan |
+## Cara Kerja
+
+| Bagian | Keterangan |
 | --- | --- |
-| `kontak.nomorWhatsApp` | Format internasional tanpa tanda `+` (contoh: `62812xxxxxxxx`). Terhubung ke semua tombol reservasi. |
-| `kontak.telepon` | Nomor telepon yang ditampilkan ke pengunjung; tombol "Hubungi" akan otomatis aktif bila diisi. |
-| `kontak.alamat` | Alamat lengkap salon untuk section lokasi dan data terstruktur mesin pencari (SEO). |
-| `kontak.googleMapsUrl` | Tautan bagikan Google Maps resmi salon (Google Maps → Bagikan → Salin tautan). |
-| `kontak.instagram` | Username Instagram tanpa tanda `@`. Tautan footer akan otomatis aktif bila diisi. |
-| `layanan` | Daftar kategori perawatan, nama, deskripsi, harga awal (IDR), dan estimasi durasi. |
-| `testimoni` | Ulasan pengalaman pelanggan asli (pastikan dengan izin pelanggan). |
-| `jamOperasional` | Jadwal buka dan tutup salon yang ditampilkan di website dan SEO. |
+| `src/data/salon.ts` | Identitas tetap (nama, tagline, deskripsi, keunggulan) dan data bawaan / cadangan. |
+| MongoDB | Koleksi `settings` (kontak + jam buka), `layanan`, `galeri`, `testimoni`. |
+| `src/lib/content.ts` | `getContent()` membaca MongoDB; jika kosong atau tidak terjangkau, memakai data bawaan. |
+| `/admin` | Panel admin (login satu password, sesi cookie bertanda tangan). |
+| `/media/<id>.jpg` | Menyajikan foto yang diunggah dari folder `UPLOAD_DIR`. |
 
-## Mengganti Foto Salon
+Halaman publik di-cache dan dibuat ulang paling lama tiap 60 detik. Setiap kali admin menyimpan sesuatu, cache dibersihkan sehingga perubahan langsung tampil.
 
-Ganti berkas gambar di dalam folder `public/images/` dengan foto asli dari Lins Salon (gunakan nama berkas yang sama):
+Foto yang diunggah otomatis diputar sesuai orientasi HP, dikecilkan maksimal 1600 px, dan disimpan sebagai JPEG.
+
+## Deploy ke VPS
+
+Kebutuhan: Node.js 20.9+ (disarankan 22 LTS), MongoDB, dan reverse proxy dengan HTTPS (mis. Caddy). Panel admin memakai cookie `Secure` di produksi, jadi **wajib diakses lewat HTTPS**.
+
+1. **MongoDB** — pasang langsung atau lewat Docker. Jangan buka port 27017 ke internet (bind ke `127.0.0.1`), dan aktifkan autentikasi jika MongoDB dipakai bersama aplikasi lain.
+2. **Environment** — isi variabel berikut di server (lihat `.env.example`):
+   `MONGODB_URI`, `MONGODB_DB`, `ADMIN_PASSWORD`, `SESSION_SECRET` (`openssl rand -base64 32`), `UPLOAD_DIR` (mis. `/var/lib/lins-salon/uploads`, folder di luar kode), dan `NEXT_PUBLIC_SITE_URL`.
+3. **Build & jalankan**
+   ```bash
+   npm ci
+   npm run build
+   npm run start            # port 3000; jalankan lewat systemd atau PM2 agar otomatis hidup ulang
+   ```
+4. **Reverse proxy** — contoh Caddyfile:
+   ```text
+   linssalon.com {
+     reverse_proxy 127.0.0.1:3000
+   }
+   ```
+5. **Backup** — salin dua hal secara berkala: dump database (`mongodump --db lins_salon --archive=lins.archive.gz --gzip`) dan folder `UPLOAD_DIR`. Foto dan harga hanya ada di dua tempat itu.
+
+Saat memperbarui kode: `git pull && npm ci && npm run build` lalu restart proses. Data di MongoDB dan `UPLOAD_DIR` tidak ikut berubah.
+
+## Mengganti Foto Bawaan
+
+Foto hero, interior, dan gambar pratinjau media sosial masih berupa berkas statis di `public/images/` (ganti dengan foto asli, nama berkas sama):
 
 ```text
 public/images/
   hero.jpg            Foto utama potret (~rasio 4:5)
   salon.jpg           Foto interior suasana salon
   og.jpg              Gambar pratinjau tautan media sosial (1200×630)
-  gallery/work-01…06  Foto hasil perawatan & suasana galeri (perbarui juga alt text di src/data/salon.ts)
 ```
 
-Susunan galeri mengombinasikan format potret dan lanskap secara dinamis.
-
-## Deployment
-
-Atur `NEXT_PUBLIC_SITE_URL` (misalnya: `https://linssalon.com`) pada environment hosting Anda agar tautan kanonikal, Open Graph, sitemap, dan robots.txt merujuk ke domain resmi.
+Foto galeri dikelola dari panel admin, bukan dari folder ini.

@@ -2,13 +2,14 @@ import Image from "next/image";
 import { ButtonLink } from "@/components/button-link";
 import { WhatsAppIcon } from "@/components/icons";
 import { OpenStatusChip } from "@/components/open-status";
-import { salon } from "@/data/salon";
+import { getContent } from "@/lib/content";
 import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
 
-export function Hero() {
-  const weekdayHours = salon.jamOperasional.find((h) => h.buka);
-  const featured = salon.layanan[0].layanan[0];
-  const totalLayanan = salon.layanan.reduce((sum, k) => sum + k.layanan.length, 0);
+export async function Hero() {
+  const { kontak, jamOperasional, layanan } = await getContent();
+  const weekdayHours = jamOperasional.find((h) => h.buka);
+  const featured = layanan[0]?.layanan[0];
+  const totalLayanan = layanan.reduce((sum, k) => sum + k.layanan.length, 0);
 
   return (
     <section
@@ -16,9 +17,9 @@ export function Hero() {
       data-hide-mobile-cta
       className="relative overflow-hidden pt-28 lg:pt-32"
     >
-      <div className="shell grid items-center gap-14 pb-20 lg:grid-cols-12 lg:gap-8 lg:pb-32">
+      <div className="shell grid grid-cols-1 items-center gap-14 pb-20 lg:grid-cols-12 lg:gap-8 lg:pb-32">
         <div className="lg:col-span-7">
-          <OpenStatusChip className="animate-rise" />
+          {/* <OpenStatusChip jamOperasional={jamOperasional} className="animate-rise" /> */}
 
           <h1
             className="display animate-rise mt-6 text-[3.5rem] leading-[0.98] sm:text-7xl lg:text-[6rem] xl:text-[6.75rem]"
@@ -57,7 +58,7 @@ export function Hero() {
             className="animate-rise mt-9 flex flex-wrap items-center gap-x-7 gap-y-3"
             style={{ animationDelay: "240ms" }}
           >
-            <ButtonLink href={getWhatsAppUrl()} external>
+            <ButtonLink href={getWhatsAppUrl(kontak)} external>
               <WhatsAppIcon className="h-4 w-4" />
               Booking via WhatsApp
             </ButtonLink>
@@ -76,9 +77,11 @@ export function Hero() {
                 {weekdayHours.buka}–{weekdayHours.tutup} WIB
               </li>
             )}
-            <li>
-              <span className="font-semibold text-ink">{totalLayanan} layanan</span> rambut &amp; kecantikan
-            </li>
+            {totalLayanan > 0 && (
+              <li>
+                <span className="font-semibold text-ink">{totalLayanan} layanan</span> rambut &amp; kecantikan
+              </li>
+            )}
           </ul>
         </div>
 
@@ -98,17 +101,19 @@ export function Hero() {
             />
           </div>
 
-          <figcaption
-            className="animate-rise absolute -bottom-6 left-0 rounded-2xl bg-paper p-4 pr-6 shadow-[0_18px_40px_-18px_rgba(74,40,56,0.35)] sm:-left-6"
-            style={{ animationDelay: "480ms" }}
-          >
-            <p className="text-xs text-ink-soft">Tarif awal</p>
-            <p className="display mt-1 text-xl">{featured.nama}</p>
-            <p className="mt-0.5 text-sm text-ink-soft">
-              <span className="font-semibold text-rose">{formatPrice(featured.hargaMulai)}</span>
-              {featured.durasi && ` · ${featured.durasi}`}
-            </p>
-          </figcaption>
+          {featured && (
+            <figcaption
+              className="animate-rise absolute -bottom-6 left-0 rounded-2xl bg-paper p-4 pr-6 shadow-[0_18px_40px_-18px_rgba(74,40,56,0.35)] sm:-left-6"
+              style={{ animationDelay: "480ms" }}
+            >
+              <p className="text-xs text-ink-soft">Tarif awal</p>
+              <p className="display mt-1 text-xl">{featured.nama}</p>
+              <p className="mt-0.5 text-sm text-ink-soft">
+                <span className="font-semibold text-rose">{formatPrice(featured.hargaMulai)}</span>
+                {featured.durasi && ` · ${featured.durasi}`}
+              </p>
+            </figcaption>
+          )}
         </figure>
       </div>
     </section>

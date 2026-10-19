@@ -1,10 +1,12 @@
 import { ArrowUpRight } from "lucide-react";
 import { ButtonLink } from "@/components/button-link";
 import { Reveal } from "@/components/reveal";
-import { salon } from "@/data/salon";
+import { getContent } from "@/lib/content";
 import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
 
-export function Services() {
+export async function Services() {
+  const { kontak, layanan } = await getContent();
+
   return (
     <section
       id="layanan"
@@ -19,8 +21,8 @@ export function Services() {
           </p>
         </Reveal>
 
-        <div className="mt-14 grid gap-6 lg:mt-20 lg:grid-cols-2 lg:gap-8">
-          {salon.layanan.map((kategori, categoryIndex) => (
+        <div className="mt-14 grid grid-cols-1 gap-6 lg:mt-20 lg:grid-cols-2 lg:gap-8">
+          {layanan.map((kategori, categoryIndex) => (
             <Reveal key={kategori.judul} delay={categoryIndex * 0.1}>
               <div className="h-full rounded-[2rem] bg-paper p-7 sm:p-10">
                 <div className="flex items-center justify-between gap-4">
@@ -65,7 +67,7 @@ export function Services() {
 
         <Reveal className="mt-12 lg:mt-16">
           <ButtonLink
-            href={getWhatsAppUrl("Halo Lins Salon, saya ingin bertanya lebih lanjut seputar layanan perawatan.")}
+            href={getWhatsAppUrl(kontak, "Halo Lins Salon, saya ingin bertanya lebih lanjut seputar layanan perawatan.")}
             external
             variant="outline"
           >
